@@ -1,62 +1,44 @@
 import passport from "passport";
-import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
-import jwt from "jsonwebtoken";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  picture: string;
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error("Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET in .env");
 }
-
-interface TokenUser {
-  user: User;
-  token: string;
-}
-
-const users = new Map<string, User>();
 
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: "/auth/google/callback",
+      clientID: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      callbackURL: "http://localhost:5000/auth/callback/google", // Ensure this matches Google Cloud Console
     },
-    (
-      accessToken: string,
-      refreshToken: string,
-      profile: Profile,
-      done: (error: any, user?: TokenUser) => void
-    ) => {
-      const user: User = {
-        id: profile.id,
-        name: profile.displayName,
-        email: profile.emails?.[0]?.value || "",
-        picture: profile.photos?.[0]?.value || "",
-      };
-
-      users.set(user.id, user);
-
-      const token = jwt.sign(user, process.env.JWT_SECRET as string, {
-        expiresIn: "1h",
-      });
-
-      return done(null, { user, token });
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const user = {
+          id: profile.id,
+          displayName: profile.displayName,
+          email: profile.emails?.[0].value,
+          picture: profile.photos?.[0].value,
+          accessToken,
+        };
+        done(null, user);
+      } catch (error) {
+        done(error);
+      }
     }
   )
 );
 
-passport.serializeUser((user: any, done) => {
-  done(null, user.user.id); // Explicitly allow any type to avoid TypeScript errors || Getting some error.. could not figure out
+// Serialize & Deserialize User
+passport.serializeUser((user, done) => {
+  done(null, user);
 });
 
-passport.deserializeUser((id: string, done) => {
-  const user = users.get(id);
-  done(null, user || null);
+passport.deserializeUser((user, done) => {
+  done(null, user as Express.User);
 });
 
 export default passport;
