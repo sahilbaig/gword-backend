@@ -5,3 +5,5 @@ export const getDashboard = (req: Request, res: Response) => {
     message: "Hello helo",
   });
 };
+
+//This is s  test route to confirm app works
