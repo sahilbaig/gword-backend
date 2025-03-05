@@ -10,6 +10,7 @@ export const handleGoogleCallback = (
     res.status(401).json({ message: "Unauthorized" });
     return; // End the function here
   }
+  const user = req.user;
 
   // Generate JWT
   const token = jwt.sign(
@@ -25,5 +26,14 @@ export const handleGoogleCallback = (
     httpOnly: true,
   });
 
+  res.cookie("googleAccessToken", req.user.accessToken, {
+    httpOnly: true,
+    secure: true,
+  });
+
+  res.cookie("googleRefreshToken", req.user.refreshToken, {
+    httpOnly: true,
+    secure: true,
+  });
   res.redirect("http://localhost:3000/dashboard");
 };

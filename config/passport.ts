@@ -13,7 +13,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: "http://localhost:5000/auth/callback/google", // Ensure this matches Google Cloud Console
+      callbackURL: "http://localhost:5000/auth/callback/google",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -23,6 +23,7 @@ passport.use(
           email: profile.emails?.[0].value,
           picture: profile.photos?.[0].value,
           accessToken,
+          refreshToken,
         };
         done(null, user);
       } catch (error) {
