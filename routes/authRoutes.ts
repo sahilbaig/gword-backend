@@ -6,7 +6,11 @@ const router = express.Router();
 
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email", "https://www.googleapis.com/auth/drive.file"],
+    accessType: "offline",
+    prompt: "consent",
+  })
 );
 
 router.get(
