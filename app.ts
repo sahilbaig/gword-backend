@@ -7,12 +7,15 @@ import passport from "./config/passport"; // Import configured Passport
 import authRoutes from "./routes/authRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import driveRoutes from "./routes/driveRoutes";
+import draftRoutes from "./routes/draftRoutes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+import connectDB from "./config/db";
 
 dotenv.config();
 
 const app = express();
+connectDB();
 
 // Middleware
 app.use(
@@ -47,6 +50,7 @@ const PORT = process.env.PORT || 5000;
 app.use("/auth", authRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/drive", driveRoutes);
+app.use("/draft", draftRoutes);
 
 // Define the shape of the user object
 interface User {
