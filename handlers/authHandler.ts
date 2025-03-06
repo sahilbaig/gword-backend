@@ -46,7 +46,7 @@ export const handleGoogleCallback = async (
     await newDraft.save();
 
     // Redirect to the new draft's page
-    res.redirect(`http://localhost:3000/d/${newDraft._id}`);
+    res.redirect(`${process.env.FRONTEND_URL}/d/${newDraft._id}`);
     return;
   } catch (error) {
     console.error("Error creating draft:", error);

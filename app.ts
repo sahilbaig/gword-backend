@@ -22,7 +22,7 @@ connectDB();
 // Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000", // Allow requests from the frontend
+    origin: process.env.FRONTEND_URL, // Allow requests from the frontend
     credentials: true, // Allow cookies to be sent
   })
 );
@@ -36,9 +36,8 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // Secure in production
+      // Secure in production
       httpOnly: true, // Prevent client-side access
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Adjust for cross-site requests
     },
   })
 );
