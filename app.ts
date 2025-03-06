@@ -12,6 +12,7 @@ import docRoutes from "./routes/docRoutes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 dotenv.config();
 
@@ -44,8 +45,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-const PORT = process.env.PORT || 5000;
 
 // Routes
 app.use("/auth", authRoutes);
@@ -96,4 +95,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "Something went wrong!" });
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Export the Express app as a Vercel function
+export default (req: VercelRequest, res: VercelResponse) => {
+  return app(req as any, res as any);
+};
