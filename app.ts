@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import driveRoutes from "./routes/driveRoutes";
 import draftRoutes from "./routes/draftRoutes";
+import docRoutes from "./routes/docRoutes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db";
@@ -51,6 +52,7 @@ app.use("/auth", authRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/drive", driveRoutes);
 app.use("/draft", draftRoutes);
+app.use("/doc", docRoutes);
 
 // Define the shape of the user object
 interface User {
@@ -76,9 +78,9 @@ app.get("/api/user", (req: any, res: any) => {
     ) as JwtPayload & User; // Cast to JwtPayload and User
 
     // Send user information to the frontend
-    res.json({ user: decoded });
+    return res.json({ user: decoded });
   } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 });
 

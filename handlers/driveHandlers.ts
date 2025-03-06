@@ -7,8 +7,8 @@ export const saveToDrive = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { html } = req.body;
-  const googleToken = req.cookies.googleAccessToken; // Extract access token from headers
+  const { html, title } = req.body;
+  const googleToken = req.cookies.googleAccessToken;
 
   if (!html) {
     res.status(400).json({ error: "No HTML content provided" });
@@ -29,10 +29,11 @@ export const saveToDrive = async (
 
     const drive = google.drive({ version: "v3", auth });
 
-    // Upload to Google Drive
+    // Use title for the file name
     const fileMetadata = {
-      name: "output.docx",
+      name: title ? `${title}.docx` : "Untitled.docx",
     };
+
     const media = {
       mimeType:
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
