@@ -2,10 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "A simple backend",
-  "main": "app.ts",
+  "main": "dist/app.js",
   "scripts": {
     "dev": "nodemon --ext ts --exec ts-node app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "npm run build && node dist/app.js"
   },
   "author": "",
   "license": "ISC",
