@@ -22,7 +22,7 @@ connectDB();
 // Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Allow requests from the frontend
+    origin: process.env.FRONTEND_URL?.replace(/\/$/, ""), // Allow requests from the frontend
     credentials: true, // Allow cookies to be sent
   })
 );
@@ -63,7 +63,7 @@ interface User {
 // Route to fetch user information
 app.get("/api/user", (req: any, res: any) => {
   const token = req.cookies.token; // Access the token from the httpOnly cookie
-
+  console.log(token, "token that I get");
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }

@@ -23,14 +23,20 @@ export const handleGoogleCallback = async (
   );
 
   // Set the token in a cookie
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
   res.cookie("googleAccessToken", req.user.accessToken, {
     httpOnly: true,
     secure: true,
+    sameSite: "none",
   });
   res.cookie("googleRefreshToken", req.user.refreshToken, {
     httpOnly: true,
     secure: true,
+    sameSite: "none",
   });
 
   console.log(user.email, "sse this");
